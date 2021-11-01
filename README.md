@@ -1,2 +1,2 @@
-# Forex Currency Trading 
- Tinkers RL Project
+# Forex Currency Trading
+ Tinkers Project
