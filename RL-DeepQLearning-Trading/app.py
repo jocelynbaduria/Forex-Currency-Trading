@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import keras.backend.tensorflow_backend as tb
-tb._SYMBOLIC_SCOPE.value = True
+#import keras.backend.tensorflow_backend as tb
+#tb._SYMBOLIC_SCOPE.value = True
 
 from src.methods import evaluate_model
 from src.agent import RLAgent
@@ -30,7 +30,8 @@ def load_data_(symbol, window_size):
 @st.cache
 def filter_data_by_date(data, start_date, end_date):
   date_range = pd.date_range(start = start_date, end = end_date)
-  return data.loc[date_range].dropna()
+  #return data.loc[date_range].dropna()
+  return data.dropna()
 
 def load_model(state_size, model_name):
   return RLAgent(state_size = window_size, pretrained = True, model_name = model_name)
@@ -54,17 +55,17 @@ def benchmarks(symbol, data, window_size = 10):
    return baseline_results, heuristic_results
 
 # Streamlit App
-st.title('DeepRL Trader')
-st.subheader('Model uses Double Deep Q Network to generate a policy of optimal trades')
+st.title('Forex Trading Agent')
+st.subheader('Team-Tinkers project for Reinforcement Learning')
 
-symbols = ['AAPL', 'AMZN', 'FB', 'GOOG', 'IBM','JNJ', 'NFLX', 'SPY', 'TSLA']
-symbol = st.sidebar.selectbox('Stock Symbol:', symbols)
+symbols = ['INR', 'EUR']
+symbol = st.sidebar.selectbox('Curreny Symbol:', symbols)
 
 index = load_data_(symbol, 10).index
 start_date, end_date, window_size = sidebar(index)
 submit = st.sidebar.button('Run')
-if st.sidebar.checkbox('How Does This Work?'):
-  how_it_works()
+#if st.sidebar.checkbox('How Does This Work?'):
+  #how_it_works()
 
 
 
