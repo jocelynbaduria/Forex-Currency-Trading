@@ -55,22 +55,6 @@ def train_model(agent, episode, data, episode_count = 50, batch_size = 32, windo
     reward = calc_reward(pct_change[t] * 100, net_holdings)
     total_profit += reward
 
-    # if action == 1: # Buy
-    #   agent.inventory.append(data.price[t])
-    #
-    #   reward -= 1e-5 # Commission Penalty
-
-    # elif action == 2 and len(agent.inventory) > 0: # Sell
-    #   purchase_price = agent.inventory.pop(0)
-    #   delta = data.price[t] - purchase_price
-    #   reward = delta - 1e-5 # Commission Penalty
-    #   total_profit += delta
-    #   shares.append(-1)
-
-    # else: # Hold
-    #   shares.append(0)
-    #   reward -= 1e-3
-
     if not done:
       next_state = get_state(normed_data, t + 1)
       agent.remember(state, action, reward, next_state, done)
@@ -78,6 +62,61 @@ def train_model(agent, episode, data, episode_count = 50, batch_size = 32, windo
 
     if len(agent.memory) > batch_size:
       loss = agent.replay(batch_size)
+      average_loss.append(loss)
+
+    if episode % 10 == 0:
+      agent.save(episode)
+
+    if done: return (episode, episode_count, total_profit, np.array(average_loss).mean())
+
+def train_pg_model(agent, episode, data, episode_count = 50, batch_size = 32, window_size = 10):
+  total_profit = 0
+  num_observations = len(data)
+
+  agent.inventory = []
+  shares_history = []
+  average_loss = []
+
+  net_holdings = 0
+  normed_data = normalize(data)
+  pct_change = daily_pct_change(data.price, window_size)
+
+  for t in tqdm(range(num_observations), total = num_observations, leave = True, desc = f'Episode {episode}/{episode_count}'):
+    done = t == (num_observations - 1)
+
+    state = get_state(normed_data, t)
+    action, prob = agent.action(state)
+
+    if action == 2 and net_holdings == 0:
+        shares = -100
+        net_holdings += -100
+    elif action == 2 and net_holdings == 100:
+        shares = -200
+        net_holdings += -200
+    elif action == 1 and net_holdings == 0:
+        shares = 100
+        net_holdings += 100
+    elif action == 1 and net_holdings == -100:
+        shares = 200
+        net_holdings += 200
+    else:
+        shares = 0
+    shares_history.append(shares)
+
+    reward = calc_reward(pct_change[t] * 100, net_holdings)
+    total_profit += reward
+
+    if not done:
+      next_state = get_state(normed_data, t + 1)
+      agent.memorize(state, action, prob, reward)
+      state = next_state
+
+    if done:
+      agent.memorize(state, action, prob, reward)
+      loss = agent.train()
+            #print('Episode: %d - Score: %f.' % (episode, score))
+    # if len(agent.memory) > batch_size:
+    #   loss = agent.replay(batch_size)
       average_loss.append(loss)
 
     if episode % 10 == 0:
@@ -103,7 +142,7 @@ def evaluate_model(agent, data, verbose, window_size = 10):
     reward = 0
 
     state = get_state(normed_data, t)
-    action = agent.action(state, evaluation = True)
+    action, prob = agent.action(state, evaluation = True)
 
     if action == 2 and net_holdings == 0:
       shares = -10
@@ -154,7 +193,7 @@ def evaluate_model(agent, data, verbose, window_size = 10):
 
     if not done:
       next_state = get_state(normed_data, t + 1)
-      agent.memory.append((state, action, reward, next_state, done))
+      #agent.memorize(state, action, prob, reward)
       state = next_state
 
     if done: return total_profit, history, shares_history

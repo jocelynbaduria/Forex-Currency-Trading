@@ -2,10 +2,10 @@ import random
 from collections import deque
 import numpy as np
 import tensorflow as tf
-import keras.backend as K
-from keras.models import Sequential
-from keras.models import load_model, clone_model
-from keras.layers import Dense
+#import keras.backend as K
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import load_model, clone_model
+from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import Huber
 from src.utils import timestamp
@@ -74,7 +74,7 @@ class RLAgent:
       return random.randrange(self.action_size)
 
     action_probs = self.model.predict(state)
-    return np.argmax(action_probs[0])
+    return np.argmax(action_probs[0]), action_probs
 
   def replay(self, batch_size):
     mini_batch = random.sample(self.memory, batch_size)
