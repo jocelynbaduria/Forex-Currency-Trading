@@ -34,7 +34,7 @@ def train_model(agent, episode, data, episode_count = 50, batch_size = 32, windo
     done = t == (num_observations - 1)
 
     state = get_state(normed_data, t)
-    action = agent.action(state)
+    action, prob = agent.action(state)
 
     if action == 2 and net_holdings == 0:
         shares = -100

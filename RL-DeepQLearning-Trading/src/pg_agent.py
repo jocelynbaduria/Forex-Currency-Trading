@@ -88,7 +88,7 @@ class PGAgent:
         X = np.squeeze(np.vstack([self.states]))
         Y = self.probs + self.learning_rate * np.squeeze(np.vstack([gradients]))
         #self.model.train_on_batch(X, Y)
-        loss = self.model.fit(X, Y, batch_size=24).history["loss"][0]
+        loss = self.model.fit(X, Y).history["loss"][0]
         self.states, self.probs, self.gradients, self.rewards = [], [], [], []
 
         return loss
