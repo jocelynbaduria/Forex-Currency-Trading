@@ -52,6 +52,7 @@ def get_stock_data(stock_file):
   return list(df['Adj Close'])
 
 def load_data(path):
+  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/PHP.csv'
   temp = pd.read_csv(path)
 
   if "Date" in temp.columns:
