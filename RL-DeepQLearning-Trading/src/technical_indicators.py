@@ -2,19 +2,22 @@ import pandas as pd
 import numpy as np
 import ta
 
-def add_momentum_indicators(high, low, close, volume, n_period = 7, fillna=True):
+# def add_momentum_indicators(high, low, close, volume, n_period = 7, fillna=True):
+def add_momentum_indicators(high, low, close, n_period = 7, fillna=True):
 	"""
 	Money Flow Index (MFI)
 	True strength index (TSI)
 	Kaufman's Adaptive Moving Average (KAMA)
 	"""
 	df = pd.DataFrame(index = close.index)
-	df['mom_mfi'] = ta.momentum.MFIIndicator(high, low, close, volume, n_period, fillna = fillna).money_flow_index()
+	df['mom_mfi'] = ta.momentum.MFIIndicator(high, low, close, n_period, fillna = fillna).money_flow_index()
+	# df['mom_mfi'] = ta.momentum.MFIIndicator(high, low, close, volume, n_period, fillna = fillna).money_flow_index()
 	df['mom_tsi'] = ta.momentum.TSIIndicator(close, fillna = fillna).tsi()
 	df['mom_kama'] = ta.momentum.kama(close, fillna=fillna)
 	return df
 
-def add_trend_indicators(high, low, close, volume, n_period = 7, fillna = True):
+# def add_trend_indicators(high, low, close, volume, n_period = 7, fillna = True):
+def add_trend_indicators(high, low, close, n_period = 7, fillna = True):
 	"""
 	Vortex Indicator (VI)
 	Trix (TRIX)
@@ -49,19 +52,19 @@ def add_volatility_indicators(high, low, close, n_period = 7, fillna=True):
 	df['vol_dc_lband'] = ta.volatility.DonchianChannel(close, n_period, fillna = fillna).donchian_channel_lband()
 	return df
 
-def add_volume_indicators(high, low, close, volume, n_period = 7, fillna=True):
-	"""
-	Accumulation/Distribution Index (ADI)
-	Chaikin Money Flow (CMF)
-	Volume-price Trend (VPT)
-	Negative Volume Index (NVI)
-	"""
-	df = pd.DataFrame(index = close.index)
-	df['volume_adi'] = ta.volume.AccDistIndexIndicator(high, low, close, volume, fillna).acc_dist_index()
-	df['volume_cmf'] = ta.volume.ChaikinMoneyFlowIndicator(high, low, close, volume, n_period, fillna).chaikin_money_flow()
-	df['volume_vpt'] = ta.volume.VolumePriceTrendIndicator(close, volume, fillna).volume_price_trend()
-	df['volume_nvi'] = ta.volume.NegativeVolumeIndexIndicator(close, volume, fillna).negative_volume_index()
-	return df
+# def add_volume_indicators(high, low, close, volume, n_period = 7, fillna=True):
+# 	"""
+# 	Accumulation/Distribution Index (ADI)
+# 	Chaikin Money Flow (CMF)
+# 	Volume-price Trend (VPT)
+# 	Negative Volume Index (NVI)
+# 	"""
+# 	# df = pd.DataFrame(index = close.index)
+# 	# df['volume_adi'] = ta.volume.AccDistIndexIndicator(high, low, close, volume, fillna).acc_dist_index()
+# 	# df['volume_cmf'] = ta.volume.ChaikinMoneyFlowIndicator(high, low, close, volume, n_period, fillna).chaikin_money_flow()
+# 	# df['volume_vpt'] = ta.volume.VolumePriceTrendIndicator(close, volume, fillna).volume_price_trend()
+# 	# df['volume_nvi'] = ta.volume.NegativeVolumeIndexIndicator(close, volume, fillna).negative_volume_index()
+# 	# return df
 
 def find_indexes(indicator_type, columns):
   indicator = f'{indicator_type}_'
@@ -108,10 +111,10 @@ def stochastic_oscillator_d(prices, k_window = 7, d_window = 3):
 	return stok.rolling(window = d_window).mean().fillna(method ='bfill')
 
 # volume
-def on_balance_volume(prices, volume):
-	vol = prices.diff().fillna(0).apply(np.sign) * volume
-	vol.iloc[0] = 1.
-	return vol.cumsum()
+# def on_balance_volume(prices, volume):
+# 	vol = prices.diff().fillna(0).apply(np.sign) * volume
+# 	vol.iloc[0] = 1.
+# 	return vol.cumsum()
 
 # trend
 def simple_moving_average(prices, window = 7):
@@ -146,14 +149,14 @@ def bollinger_band_pct(prices, sma):
 
 def indicators_dict(data, window = 7):
   prices = data.adjusted_close
-  volume = data.volume
+#   volume = data.volume
   return {
     'price': prices,
     'trend_rsi': relative_strength_index(prices, window),
     'mom_moms': momentum(prices, window),
     'trend_stok': stochastic_oscillator_k(prices, window),
     'trend_stod': stochastic_oscillator_d(prices, window),
-    'volume_obv': on_balance_volume(prices, volume),
+    # 'volume_obv': on_balance_volume(prices, volume),
     'trend_sma': simple_moving_average(prices, window),
     'trend_p2sma': price_to_sma(prices, simple_moving_average(prices, window)),
     'trend_ema': exponential_moving_average(prices, window),

@@ -1,6 +1,7 @@
 import argparse
 from src.utils import get_stock_data
 from src.agent import RLAgent
+from src.pg_agent import PGAgent
 from src.methods import evaluate_model
 from src.utils import show_evaluation_result, load_data, add_technical_features
 import os
@@ -15,17 +16,21 @@ def run(eval_stock, window_size, model_name, verbose):
   num_features = data.shape[1]
 
   if model_name is not None:
-    agent = RLAgent(num_features, pretrained=True, model_name=model_name)
+    # agent = RLAgent(num_features, pretrained=True, model_name=model_name)
+    agent = PGAgent(num_features, window_size=window_size)
     profit, history, valid_shares = evaluate_model(agent, data, verbose)
     show_evaluation_result(profit)
 
 
 if __name__ == "__main__":
-  parser = argparse.ArgumentParser(description='Evaluate RLAgent')
+  parser = argparse.ArgumentParser(description='Evaluate PGAgent')
   parser.add_argument('--eval')
   parser.add_argument('--window-size', default = 10)
   parser.add_argument('--model-name')
   parser.add_argument('--verbose', default = True)
+  parser.add_argument('--pretrained', default = True)
+  
+  
 
   args = parser.parse_args()
 
@@ -33,6 +38,7 @@ if __name__ == "__main__":
   window_size = int(args.window_size)
   model_name = args.model_name
   verbose = args.verbose
+  pretrained = args.pretrained
 
   coloredlogs.install(level="DEBUG")
 

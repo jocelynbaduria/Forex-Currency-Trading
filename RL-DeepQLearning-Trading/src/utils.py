@@ -12,7 +12,7 @@ from .technical_indicators import (
   add_momentum_indicators,
   add_trend_indicators,
   add_volatility_indicators,
-  add_volume_indicators
+  # add_volume_indicators
 )
 
 def timestamp():
@@ -52,7 +52,8 @@ def get_stock_data(stock_file):
   return list(df['Adj Close'])
 
 def load_data(path):
-  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/PHP.csv'
+  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/EUR_NC.csv'
+  # path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/GOOG_2018.csv'
   temp = pd.read_csv(path)
 
   if "Date" in temp.columns:
@@ -67,7 +68,8 @@ def load_data(path):
       temp.index.name = 'Date'
       temp.drop('timestamp', axis = 1, inplace = True)
 
-  temp = temp.loc[:, ['adjusted_close', 'high', 'close', 'open', 'low', 'volume']]
+  # temp = temp.loc[:, ['adjusted_close', 'high', 'close', 'open', 'low', 'volume']]
+  temp = temp.loc[:, ['adjusted_close', 'high', 'close', 'open', 'low']]
   return temp
 
 def add_technical_features(data, window, fillna = True):
@@ -75,11 +77,19 @@ def add_technical_features(data, window, fillna = True):
   df = pd.DataFrame(index = data.index)
   for key in inds.keys(): df[key] = inds[key]
 
-  high, low, close, volume = data.high, data.low, data.close, data.volume
-  df = df.join(add_momentum_indicators(high, low, close, volume, window, fillna))
-  df = df.join(add_trend_indicators(high, low, close, volume, window, fillna))
+  # high, low, close, volume = data.high, data.low, data.close, data.volume
+  # df = df.join(add_momentum_indicators(high, low, close, volume, window, fillna))
+  # df = df.join(add_trend_indicators(high, low, close, volume, window, fillna))
+  # df = df.join(add_volatility_indicators(high, low, close, window, fillna))
+  # df = df.join(add_volume_indicators(high, low, close, volume, window, fillna))
+  # return df
+
+  # high, low, close, volume = data.high, data.low, data.close
+  high, low, close = data.high, data.low, data.close
+  df = df.join(add_momentum_indicators(high, low, close, window, fillna))
+  df = df.join(add_trend_indicators(high, low, close, window, fillna))
   df = df.join(add_volatility_indicators(high, low, close, window, fillna))
-  df = df.join(add_volume_indicators(high, low, close, volume, window, fillna))
+  # df = df.join(add_volume_indicators(high, low, close, window, fillna))
   return df
 
 def results_df(price, shares, starting_value = 10_000):

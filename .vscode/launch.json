@@ -1,0 +1,51 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--eval",
+                "data/EUR_NC.csv",
+                "--model-name","EUR_NC",
+                "--window-size","10",
+                "--verbose","True"
+            ]
+        },
+        {
+            "name": "Python: Streamlit",
+            "type": "python",
+            "request": "launch",
+            "module": "streamlit",
+            "env": {
+                "STREAMLIT_APP": "app.py",
+                "STREAMLIT_ENV": "development"
+            },
+            "args": [
+                "run"
+            ],
+            "jinja": true
+        },
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "--train",
+                "data/EUR_NC.csv",
+                "--valid",
+                "data/EUR_NC.csv",
+                "--model-type=pg",
+                "--episode-count",
+                "50",
+                "--window-size",
+                "10"
+            ]
+        }
+    ]
+}

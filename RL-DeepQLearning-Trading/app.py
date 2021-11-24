@@ -6,6 +6,7 @@ import numpy as np
 
 from src.methods import evaluate_model
 from src.agent import RLAgent
+from src.pg_agent import PGAgent
 from src.BaselineModel import BaselineModel
 from src.HeuristicTrader import HeuristicTrader
 from how_it_works import how_it_works
@@ -34,7 +35,7 @@ def filter_data_by_date(data, start_date, end_date):
   return data.dropna()
 
 def load_model(state_size, model_name):
-  return RLAgent(state_size = window_size, pretrained = True, model_name = model_name)
+  return PGAgent(state_size = window_size, pretrained = True, model_name = model_name)
 
 def evaluate(agent, test_data, window_size, verbose = True):
   result, history, shares = evaluate_model(agent, test_data, window_size, verbose)
@@ -58,7 +59,7 @@ def benchmarks(symbol, data, window_size = 10):
 st.title('Forex Trading Agent')
 st.subheader('Team-Tinkers project for Reinforcement Learning')
 
-symbols = ['INR', 'EUR', 'PHP']
+symbols = ['INR_NC', 'EUR_NC', 'PHP_NC', 'GOOG']
 symbol = st.sidebar.selectbox('Curreny Symbol:', symbols)
 
 index = load_data_(symbol, 10).index

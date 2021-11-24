@@ -53,7 +53,8 @@ streamlit run app.py
 
 To train the model, use the following command:
 ```shell
-$ python3 train.py --train data/GOOG.csv --valid GOOG_2018.csv --episode-count 50 --window-size 10
+# $ python3 train.py --train data/GOOG.csv --valid GOOG_2018.csv --episode-count 50 --window-size 10
+$ python3 train.py --train data/EUR_NC.csv --valid EUR_NC.csv --model-type=pg  --episode-count 50 --window-size 10
 ```
 
 ### Evaluation
