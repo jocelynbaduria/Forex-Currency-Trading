@@ -52,7 +52,7 @@ def get_stock_data(stock_file):
   return list(df['Adj Close'])
 
 def load_data(path):
-  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/EUR_NC.csv'
+  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/INR.csv'
   # path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/GOOG_2018.csv'
   temp = pd.read_csv(path)
 

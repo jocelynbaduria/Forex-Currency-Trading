@@ -1,3 +1,4 @@
+import random
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Reshape, Flatten
@@ -6,13 +7,15 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.losses import Huber
 from src.utils import timestamp
 
+
 #from keras.layers.convolutional import Convolution2D
 
 
 class PGAgent:
-    def __init__(self, state_size, action_size):
+    # def __init__(self, state_size, action_size, pretrained = False, model_name = None, window_size = 10):
+    def __init__(self, state_size, pretrained = False, model_name = None, window_size = 10):
         self.state_size = state_size
-        self.action_size = action_size
+        self.action_size = 3
         self.gamma = 0.99
         self.learning_rate = 0.001
         self.loss = Huber
@@ -55,10 +58,13 @@ class PGAgent:
         self.gradients.append(np.array(y).astype('float32') - prob)
         self.states.append(state)
         self.rewards.append(reward)
-
+        
     def action(self, state, evaluation = False):
         #state = state.reshape([1, state.shape[0]])
 
+        # if not evaluation and (random.random() <= self.rar):
+        #     return random.randrange(self.action_size)
+        
         if evaluation == True:
             action_probs = self.model.predict(state)
             return np.argmax(action_probs[0]), action_probs

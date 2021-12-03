@@ -59,7 +59,7 @@ def benchmarks(symbol, data, window_size = 10):
 st.title('Forex Trading Agent')
 st.subheader('Team-Tinkers project for Reinforcement Learning')
 
-symbols = ['INR_NC', 'EUR_NC', 'PHP_NC', 'GOOG']
+symbols = ['INR', 'EUR', 'PHP']
 symbol = st.sidebar.selectbox('Curreny Symbol:', symbols)
 
 index = load_data_(symbol, 10).index

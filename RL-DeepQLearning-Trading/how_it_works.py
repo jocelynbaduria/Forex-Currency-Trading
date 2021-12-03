@@ -48,17 +48,17 @@ def how_it_works():
     data_ = add_technical_features(load_data(f'data/{symbol}.csv'), window = window_size).sort_values(by=['Date'], ascending=True)
     return data_
 
-  data = pd.read_csv('data/GOOG.csv')
+  data = pd.read_csv('data/PHP.csv')
   st.dataframe(data.head())
   st.markdown('From the above data example, feature generation occurs.\n Technical indicators are derived from fundamental price and volume in the categories of:')
   st.markdown('* Trend \n * Momentum \n* Volatility \n* Volume')
   st.write('The final dataframe with a total of 33 included technical indicators is shown below:')
-  st.dataframe(load_data_('GOOG', 10).head())
-  st.markdown('The above example is then normalized and fed through the Double Deep Q network that will be discussed below. ')
+  st.dataframe(load_data_('PHP_11_09_21', 10).head())
+  st.markdown('The above example is then normalized and fed through the Policy Gradient network that will be discussed below. ')
   st.markdown('#### Training Data')
-  st.write('The RL agent is trained on 7-10 years of historical data.')
+  st.write('The RL agent is trained on one year historical data.')
   st.markdown('#### Test Data')
-  st.write('The RL agent is tested on an unseen set of 1-2 years of price/volume data. In most examples, this would be 2019 price/volume data')
+  st.write('The RL agent is tested on an unseen set of data from November 09, 2020 to December 01, 2021 of price data. In most examples, this would be 2019 price/volume data')
 
   st.subheader('Model')
 
