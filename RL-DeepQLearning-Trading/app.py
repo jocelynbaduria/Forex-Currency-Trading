@@ -91,8 +91,8 @@ if submit:
   cum_return_base, avg_daily_returns_base, std_daily_returns_base, sharpe_ratio_base = get_portfolio_stats(baseline_results.Port_Vals)
   cum_return_heuristic, avg_daily_returns_heuristic, std_daily_returns_heuristic, sharpe_ratio_heuristic = get_portfolio_stats(heuristic_results.Port_Vals)
 
-  benchmark = pd.DataFrame(columns = ['Cumulative Return', 'Avg Daily Returns', 'Std Dev Daily Returns', 'Sharpe Ratio'], index = ['Double DQN', 'Buy & Hold', 'Heuristic'])
-  benchmark.loc['Double DQN'] = [cum_return * 100, avg_daily_returns * 100, std_daily_returns, sharpe_ratio]
+  benchmark = pd.DataFrame(columns = ['Cumulative Return', 'Avg Daily Returns', 'Std Dev Daily Returns', 'Sharpe Ratio'], index = ['Policy Gradient', 'Buy & Hold', 'Heuristic'])
+  benchmark.loc['Policy Gradient'] = [cum_return * 100, avg_daily_returns * 100, std_daily_returns, sharpe_ratio]
   benchmark.loc['Heuristic' ] = [cum_return_heuristic * 100, avg_daily_returns_heuristic * 100, std_daily_returns_heuristic, sharpe_ratio_heuristic]
   benchmark.loc['Buy & Hold'] = [cum_return_base * 100, avg_daily_returns_base * 100, std_daily_returns_base, sharpe_ratio_base]
 
@@ -103,7 +103,7 @@ if submit:
   st.plotly_chart(fig)
 
   st.header('Raw Data')
-  st.subheader('Double DQN')
+  st.subheader('Policy Gradient')
   st.dataframe(results)
 
   st.subheader('Buy & Hold')

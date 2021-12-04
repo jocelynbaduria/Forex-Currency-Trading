@@ -52,7 +52,7 @@ def get_stock_data(stock_file):
   return list(df['Adj Close'])
 
 def load_data(path):
-  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/INR.csv'
+  path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/PHP.csv'
   # path = '/Users/olenbaduria/Documents/Forex-Currency-Trading/RL-DeepQLearning-Trading/data/GOOG_2018.csv'
   temp = pd.read_csv(path)
 
@@ -172,7 +172,7 @@ def plot_benchmark(baseline_results, heuristic_results, model_results):
     x=baseline_results.index,
     y=model_results.Port_Vals / model_results.Port_Vals[0],
     mode="lines",
-    name="DDQN",
+    name="Policy Gradient",
   ))
   fig.update_layout(title='Benchmark',
     xaxis_title='<b>Date</b>',
