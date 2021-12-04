@@ -5,8 +5,10 @@ from tensorflow.keras.layers import Dense, Reshape, Flatten
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import load_model
 from tensorflow.keras.losses import Huber
+from tensorflow.keras.metrics import RootMeanSquaredError
 from src.utils import timestamp
-
+import tensorflow as tf
+import datetime
 
 #from keras.layers.convolutional import Convolution2D
 
@@ -39,7 +41,7 @@ class PGAgent:
         model.add(Dense(units=256, activation="relu"))
         model.add(Dense(units=self.action_size, activation="softmax"))
 
-        model.compile(optimizer = self.optimizer, loss = self.loss())
+        model.compile(optimizer = self.optimizer, loss = self.loss(), metrics = [self.metrics()])
         # model = Sequential()
         # model.add(Reshape((1, 80, 80), input_shape=(self.state_size,)))
         # model.add(Convolution2D(32, 6, 6, subsample=(3, 3), border_mode='same',
@@ -94,7 +96,12 @@ class PGAgent:
         X = np.squeeze(np.vstack([self.states]))
         Y = self.probs + self.learning_rate * np.squeeze(np.vstack([gradients]))
         #self.model.train_on_batch(X, Y)
-        loss = self.model.fit(X, Y).history["loss"][0]
+        # Adding logs for tensorboard 
+
+        #log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+        tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="./logs", histogram_freq=1, write_graph=True,update_freq=1,profile_batch=0)
+
+        loss = self.model.fit(X, Y,callbacks=[tensorboard_callback]).history["loss"][0]
         self.states, self.probs, self.gradients, self.rewards = [], [], [], []
 
         return loss
@@ -102,7 +109,7 @@ class PGAgent:
     def load(self):
         #self.model.load_weights(name)
         model = load_model(f"models/{self.model_name}", custom_objects = self.custom_objects, compile=False)
-        model.compile(optimizer = self.optimizer, loss = self.loss())
+        model.compile(optimizer = self.optimizer, loss = self.loss(), metrics = [self.metrics()])
         return model
 
     def save(self, episode):
